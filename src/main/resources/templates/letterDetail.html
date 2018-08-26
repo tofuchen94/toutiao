@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>头条资讯 - 牛客网</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="keywords" content="读《Web 全栈工程师的自我修养》"/>
+    <meta name="description" content="阅读影浅分享的读《Web 全栈工程师的自我修养》，就在牛客网。"/>
+
+    <link rel="stylesheet" type="text/css" href="/styles/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/styles/font-awesome.min.css"/>
+
+    <link rel="stylesheet" media="all" href="/styles/style.css"/>
+    <script type="text/javascript" src="/scripts/jquery.js"></script>
+    <script type="text/javascript" src="/scripts/main/base/base.js"></script>
+    <script type="text/javascript" src="/scripts/main/base/util.js"></script>
+    <script type="text/javascript" src="/scripts/main/base/event.js"></script>
+    <script type="text/javascript" src="/scripts/main/base/upload.js"></script>
+    <script type="text/javascript" src="/scripts/main/component/component.js"></script>
+    <script type="text/javascript" src="/scripts/main/component/popup.js"></script>
+    <script type="text/javascript" src="/scripts/main/component/popupLogin.js"></script>
+    <script type="text/javascript" src="/scripts/main/component/upload.js"></script>
+    <script type="text/javascript" src="/scripts/main/component/popupUpload.js"></script>
+    <script type="text/javascript" src="/scripts/main/site/home.js"></script>s
+
+
+</head>
+<body class="welcome_index">
+
+<header th:replace="header::header"></header>
+<div id="main">
+    <div class="container">
+        <ul class="letter-chatlist">
+            <th:block th:each="vo:${vos}">
+            <li id="msg-item-4009580">
+                <a class="list-head">
+                    <img alt="头像" th:src="${vo.objs.headUrl}"/>
+                </a>
+                <div class="tooltip fade right in">
+                    <div class="tooltip-arrow"></div>
+                    <div class="tooltip-inner letter-chat clearfix">
+                        <div class="letter-info">
+                            <p class="letter-time" th:text="${#dates.format(vo.objs.message.createdDate,'yyyy-MM-dd HH:mm:ss')}"></p>
+                            <a href="javascript:void(0);" id="del-link" name="4009580">删除</a>
+                        </div>
+                        <p class="chat-content" th:text="${vo.objs.message.content}">
+
+                        </p>
+                    </div>
+                </div>
+            </li>
+           </th:block>
+        </ul>
+
+    </div>
+    <script type="text/javascript">
+        $(function(){
+
+            // If really is weixin
+            $(document).on('WeixinJSBridgeReady', function() {
+
+                $('.weixin-qrcode-dropdown').show();
+
+                var options = {
+                    "img_url": "",
+                    "link": "http://nowcoder.com/j/wt2rwy",
+                    "desc": "",
+                    "title": "读《Web 全栈工程师的自我修养》"
+                };
+
+                WeixinJSBridge.on('menu:share:appmessage', function (argv){
+                    WeixinJSBridge.invoke('sendAppMessage', options, function (res) {
+                        // _report('send_msg', res.err_msg)
+                    });
+                });
+
+                WeixinJSBridge.on('menu:share:timeline', function (argv) {
+                    WeixinJSBridge.invoke('shareTimeline', options, function (res) {
+                        // _report('send_msg', res.err_msg)
+                    });
+                });
+
+                // $(window).on('touchmove scroll', function() {
+                //   if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+                //     $('div.backdrop').show();
+                //     $('div.share-help').show();
+                //   } else {
+                //     $('div.backdrop').hide();
+                //     $('div.share-help').hide();
+                //   }
+                // });
+
+            });
+
+        })
+    </script>
+</div>
+<footer th:replace="footer::footer"></footer>
+
+
+<script th:inline="javascript">window.loginpop = [[${pop}]]</script>
+</body></html>

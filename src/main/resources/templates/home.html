@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>头条资讯 - 牛客网</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="keywords" content="读《Web 全栈工程师的自我修养》"/>
+    <meta name="description" content="阅读影浅分享的读《Web 全栈工程师的自我修养》，就在牛客网。"/>
+
+    <link rel="stylesheet" type="text/css" href="/styles/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/styles/font-awesome.min.css"/>
+
+    <link rel="stylesheet" media="all" href="/styles/style.css"/>
+    <script type="text/javascript" src="/scripts/jquery.js"></script>
+    <script type="text/javascript" src="/scripts/main/base/base.js"></script>
+    <script type="text/javascript" src="/scripts/main/base/util.js"></script>
+    <script type="text/javascript" src="/scripts/main/base/event.js"></script>
+    <script type="text/javascript" src="/scripts/main/base/upload.js"></script>
+    <script type="text/javascript" src="/scripts/main/component/component.js"></script>
+    <script type="text/javascript" src="/scripts/main/component/popup.js"></script>
+    <script type="text/javascript" src="/scripts/main/component/popupLogin.js"></script>
+    <script type="text/javascript" src="/scripts/main/component/upload.js"></script>
+    <script type="text/javascript" src="/scripts/main/component/popupUpload.js"></script>
+    <script type="text/javascript" src="/scripts/main/util/action.js"></script>
+    <script type="text/javascript" src="/scripts/main/site/home.js"></script>
+
+
+</head>
+<body class="welcome_index">
+
+<header th:replace="header::header"></header>
+
+<div id="main">
+
+    <div class="container" id="daily">
+        <div class="jscroll-inner">
+            <div class="daily" th:with="cur_date=${#httpServletRequest.setAttribute('pre_date','')}">
+
+                <th:block th:each="vo,iterStat:${vos}" th:with="cur_date=${#dates.format(vo.objs.news.createdDate,'yyyy-MM-dd')}">
+                        <th:block th:if="${cur_date!=pre_date}">
+                                <span th:with="pre_date=${#httpServletRequest.setAttribute('pre_date',#dates.format(vo.objs.news.createdDate,'yyyy-MM-dd'))}"></span>
+                                <h3 class="date">
+                                    <i class="fa icon-calendar"></i>
+                                    <span>头条资讯 &nbsp;<span th:text="${cur_date}"></span></span>
+                                </h3>
+                        </th:block>
+
+                        <div class="post">
+                    <div class="votebar">
+
+                        <th:block th:switch="${vo.objs.like}">
+                            <th:block th:case="1">
+                                <button class="click-like up pressed"  th:title="${vo.objs.news.id}"><i class="vote-arrow"></i><span class="count"><span th:text="${vo.objs.news.likeCount}"></span></span></button>
+                            </th:block>
+                            <th:block th:case="0">
+                                <button class="click-like up" th:title="${vo.objs.news.id}"><i class="vote-arrow"></i><span class="count" th:text="${vo.objs.news.likeCount}"></span></button>
+                            </th:block>
+                            <th:block th:case="-1">
+                                <button class="click-like up" th:title="${vo.objs.news.id}"><i class="vote-arrow"></i><span class="count" th:text="${vo.objs.news.likeCount}"></span></button>
+                            </th:block>
+                        </th:block>
+
+                        <th:block th:switch="${vo.objs.like}">
+                            <th:block th:case="1">
+                                <button class="click-dislike down" th:title="${vo.objs.news.id}"><i class="vote-arrow"></i></button>
+                            </th:block>
+                            <th:block th:case="0">
+                                <button class="click-dislike down" th:title="${vo.objs.news.id}"><i class="vote-arrow"></i></button>
+                            </th:block>
+                            <th:block th:case="-1">
+                                <button  class="click-dislike down pressed" th:title="${vo.objs.news.id}"><i class="vote-arrow"></i></button>>
+                            </th:block>
+                        </th:block>
+
+
+                    </div>
+                    <div class="content" th:data-url="@{/news/{newsId}(newsId=${vo.objs.news.id})}">
+                        <div >
+                            <img class="content-img" th:src="${vo.objs.news.image+'?imageView2/1/w/100/h/80'}" alt=""/>
+                        </div>
+                        <div class="content-main">
+                            <h3 class="title">
+                                <a target="_blank" rel="external nofollow" th:href="@{/news/{newsId}(newsId=${vo.objs.news.id})}" th:text="${vo.objs.news.title}"></a>
+                            </h3>
+                            <div class="meta">
+                                <span th:text="${vo.objs.news.link}"></span>
+                                        <span>
+                                            <i class="fa icon-comment"></i> <span th:text="${vo.objs.news.commentCount}"></span>
+                                        </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-avatar" th:with="href=${'/user/'+vo.objs.user.id+'/'}">
+                            <a th:href="${href}"><img width="32" class="img-circle" th:src="${vo.objs.user.headUrl}"/></a>
+                        </div>
+
+
+                    </div>
+
+                    <div class="subject-name" th:with="href=${'/user/'+vo.objs.user.id+'/'}">来自 <a th:href="${href}"><span th:text="${vo.objs.user.name}"></span></a></div>
+                </div>
+
+
+
+            </th:block>
+
+
+        </div>
+    </div>
+</div>
+
+</div>
+
+<footer th:replace="footer::footer"></footer>
+
+<div id="quick-download">
+    <button type="button" class="close-link btn-link" data-toggle="modal" data-target="#quick-download-app-modal"><i class="fa icon-times-circle"></i></button>
+
+    <a class="download-link" href="http://nowcoder.com/download">
+        <h3>牛客网</h3>
+        <h4>程序员的首选学习分享平台</h4>
+        <button type="button" class="btn btn-info btn-sm">下载 APP</button>
+    </a>
+
+    <div class="modal fade" id="quick-download-app-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">提示</div>
+                <div class="modal-body">
+                    <div class="checkbox">
+                        <label class="i-checks">
+                            <input id="already-installed" type="checkbox"/><i></i> 我已安装了牛客网App，不再显示
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-block btn-default" id="close-quick-download-app-modal" >关 闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">window.loginpop = [[${pop}]]</script>
+
+</body></html>

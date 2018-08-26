@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>头条资讯 - 牛客网</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="keywords" content="读《Web 全栈工程师的自我修养》"/>
+    <meta name="description" content="阅读影浅分享的读《Web 全栈工程师的自我修养》，就在牛客网。"/>
+
+    <link rel="stylesheet" type="text/css" href="/styles/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/styles/font-awesome.min.css"/>
+
+    <link rel="stylesheet" media="all" href="/styles/style.css"/>
+    <script type="text/javascript" src="/scripts/jquery.js"></script>
+    <script type="text/javascript" src="/scripts/main/base/base.js"></script>
+    <script type="text/javascript" src="/scripts/main/base/util.js"></script>
+    <script type="text/javascript" src="/scripts/main/base/event.js"></script>
+    <script type="text/javascript" src="/scripts/main/base/upload.js"></script>
+    <script type="text/javascript" src="/scripts/main/component/component.js"></script>
+    <script type="text/javascript" src="/scripts/main/component/popup.js"></script>
+    <script type="text/javascript" src="/scripts/main/component/popupLogin.js"></script>
+    <script type="text/javascript" src="/scripts/main/component/upload.js"></script>
+    <script type="text/javascript" src="/scripts/main/component/popupUpload.js"></script>
+    <script type="text/javascript" src="/scripts/main/util/action.js"></script>
+    <script type="text/javascript" src="/scripts/main/site/home.js"></script>
+
+
+</head>
+<body class="welcome_index">
+
+<header th:replace="header::header"></header>
+<div id="main">
+    <div class="container">
+        <div class="post detail">
+            <div class="votebar">
+            <th:block th:switch="${like}">
+                <th:block th:case="1">
+                    <button class="click-like up pressed"  th:title="${news.id}"><i class="vote-arrow"></i><span class="count"><span th:text="${news.likeCount}"></span></span></button>
+                </th:block>
+                <th:block th:case="0">
+                    <button class="click-like up" th:title="${news.id}"><i class="vote-arrow"></i><span class="count" th:text="${news.likeCount}"></span></button>
+                </th:block>
+                <th:block th:case="-1">
+                    <button class="click-like up" th:title="${news.id}"><i class="vote-arrow"></i><span class="count" th:text="${news.likeCount}"></span></button>
+                </th:block>
+            </th:block>
+
+            <th:block th:switch="${like}">
+                <th:block th:case="1">
+                    <button class="click-dislike down" th:title="${news.id}"><i class="vote-arrow"></i></button>
+                </th:block>
+                <th:block th:case="0">
+                    <button class="click-dislike down" th:title="${news.id}"><i class="vote-arrow"></i></button>
+                </th:block>
+                <th:block th:case="-1">
+                    <button  class="click-dislike down pressed" th:title="${news.id}"><i class="vote-arrow"></i></button>>
+                </th:block>
+            </th:block>
+            </div>
+
+            <div class="content" data-url="http://nowcoder.com/posts/5l3hjr">
+                <div class="content-img">
+                    <img th:src="${news.image+'?imageView2/1/w/100/h/80'}" alt=""/>
+                </div>
+                <div class="content-main">
+                    <h3 class="title">
+                        <a target="_blank" rel="external nofollow" th:href="${news.link}" th:text="${news.title}"></a>
+                    </h3>
+                    <div class="meta">
+                        <span th:text="${news.link}"></span>
+                              <span>
+                                  <i class="fa icon-comment"></i> <span th:text="${news.commentCount}"></span>
+                              </span>
+                    </div>
+                </div>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">
+                    <a href="http://nowcoder.com/u/125701"><img width="32" class="img-circle" th:src="${owner.headUrl}"/></a>
+                </div>
+            </div>
+
+            <div class="subject-name">来自 <a th:href="@{/user/{id}(id=${owner.id})}" th:text="${owner.name}"></a></div>
+        </div>
+
+
+        <div class="post-comment-form">
+            <th:block th:if="${user}">
+            <span>评论 <span th:text="${news.commentCount}"></span></span>
+            <form method="post" action="/addComment">
+                <div class="form-group text required comment_content">
+                    <label class="text required sr-only">
+                        <abbr title="required">*</abbr> 评论
+                    </label>
+                    <input type="hidden" name="newsId" th:value="${news.id}"/>
+                    <textarea rows="5" class="text required comment-content form-control" name="content" id="content"></textarea>
+                </div>
+                <div class="text-right">
+                    <input type="submit" name="commit" value="提 交" class="btn btn-default btn-info"/>
+                </div>
+            </form>
+            </th:block>
+            <th:block th:if="not ${user}">
+            <div class="login-actions">
+                <a class="btn btn-success" href="/?pop=1">登录后评论</a>
+            </div>
+            </th:block>
+        </div>
+
+        <div id="comments" class="comments">
+            <th:block th:each="vo:${vos}">
+
+            <div class="media">
+                <a class="media-left" th:href="@{/user/{userId}(userId=${vo.objs.user.id})}">
+                    <img th:src="${vo.objs.user.headUrl}"/>
+                </a>
+                <div class="media-body">
+                    <h4 class="media-heading"> <small class="date"><span th:text="${#dates.format(vo.objs.comment.createdDate,'yyyy-MM-dd HH:mm:ss')}"></span></small></h4>
+                    <div th:text="${vo.objs.comment.content}"></div>
+                </div>
+            </div>
+
+            </th:block>
+        </div>
+
+    </div>
+    <script type="text/javascript">
+        $(function(){
+
+            // If really is weixin
+            $(document).on('WeixinJSBridgeReady', function() {
+
+                $('.weixin-qrcode-dropdown').show();
+
+                var options = {
+                    "img_url": "",
+                    "link": "http://nowcoder.com/j/wt2rwy",
+                    "desc": "",
+                    "title": "读《Web 全栈工程师的自我修养》"
+                };
+
+                WeixinJSBridge.on('menu:share:appmessage', function (argv){
+                    WeixinJSBridge.invoke('sendAppMessage', options, function (res) {
+                        // _report('send_msg', res.err_msg)
+                    });
+                });
+
+                WeixinJSBridge.on('menu:share:timeline', function (argv) {
+                    WeixinJSBridge.invoke('shareTimeline', options, function (res) {
+                        // _report('send_msg', res.err_msg)
+                    });
+                });
+
+                // $(window).on('touchmove scroll', function() {
+                //   if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+                //     $('div.backdrop').show();
+                //     $('div.share-help').show();
+                //   } else {
+                //     $('div.backdrop').hide();
+                //     $('div.share-help').hide();
+                //   }
+                // });
+
+            });
+
+        })
+    </script>
+</div>
+<footer th:replace="footer::footer"></footer>
+
+
+<script th:inline="javascript">window.loginpop = [[${pop}]]</script>
+</body></html>
