@@ -1,6 +1,7 @@
 package com.nowcoder.async;
 
 import com.alibaba.fastjson.JSON;
+import com.nowcoder.util.CrawlerUtil;
 import com.nowcoder.util.JedisAdapter;
 import com.nowcoder.util.RedisKeyUtil;
 import org.slf4j.Logger;
@@ -50,6 +51,14 @@ public class EventConsumer implements InitializingBean,ApplicationContextAware {
                 }
             }
         }
+
+        Thread tempThread=new Thread(new Runnable() {
+            @Override
+            public void run() {
+                CrawlerUtil.crawlTencentNews();
+            }
+        });
+        tempThread.start();
 
         Thread thread=new Thread(new Runnable() {
             @Override

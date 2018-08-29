@@ -53,13 +53,13 @@ public class HomeController {
 
     @RequestMapping(path = {"/", "/index"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String index(Model model) {
-        model.addAttribute("vos", getNews(0, 0, 10));
+        model.addAttribute("vos", getNews(0, 0, 50));
         return "home";
     }
 
     @RequestMapping(path = {"/user/{userId}/"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String userIndex(Model model, @PathVariable("userId") int userId) {
-        model.addAttribute("vos", getNews(userId, 0, 10));
+        model.addAttribute("vos", getNews(userId, 0, 50));
         return "home";
     }
 }
