@@ -52,14 +52,6 @@ public class EventConsumer implements InitializingBean,ApplicationContextAware {
             }
         }
 
-        Thread tempThread=new Thread(new Runnable() {
-            @Override
-            public void run() {
-                CrawlerUtil.crawlTencentNews();
-            }
-        });
-        tempThread.start();
-
         Thread thread=new Thread(new Runnable() {
             @Override
             public void run() {

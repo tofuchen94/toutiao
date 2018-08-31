@@ -3,6 +3,7 @@ package com.nowcoder.crawler;
 import com.nowcoder.dao.NewsDao;
 import com.nowcoder.model.News;
 import com.nowcoder.util.CrawlerUtil;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ public class TencentNewsCrawler implements Crawler{
     @Autowired
     NewsDao newsDao;
 
-    @Scheduled(cron = "0 24 22 * * ?")
+    @Scheduled(cron = "0 17 15 * * ?")
     public void crawlNews(){
         List<News> newsList= CrawlerUtil.crawlTencentNews();
         //过滤新闻操作
@@ -28,6 +29,4 @@ public class TencentNewsCrawler implements Crawler{
         }
         System.out.println("****************爬取腾讯新闻完成***************");
     }
-
-
 }
